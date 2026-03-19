@@ -1,10 +1,25 @@
 <template>
-  <article>
-    <h1>{{ product.title }}</h1>
-    <p>{{ product.description }}</p>
-    <p>R$: {{ product.price.toFixed(2).replace('.', ',') }}</p>
-    <button @click="addItem">Adicionar</button>
-  </article>
+  <!-- <article class="w-[200px]">
+    <h1>{{ product?.title }}</h1>
+    <p>{{ product?.description }}</p>
+    <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
+    <button @click="addItem(product)">Adicionar</button>
+  </article> -->
+  <Card :style="{ width: '100%', minWidth: '200px', maxWidth: '220px' }">
+    <template #header>
+      <img :src="product?.imageUrl" class="w-full object-cover" />
+    </template>
+
+    <template #title>
+      <h1>{{ product?.title }}</h1>
+    </template>
+
+    <template #content>
+      <p>{{ product?.description }}</p>
+      <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
+      <button @click="addItem(product)">Adicionar</button>
+    </template>
+  </Card>
 </template>
 
 <script lang="ts">
@@ -22,8 +37,8 @@ export default defineComponent({
   emits: ['onClick'],
 
   methods: {
-    addItem() {
-      this.$emit('onClick', this.product)
+    addItem(product: Product) {
+      this.$emit('onClick', product)
     },
   },
 })
