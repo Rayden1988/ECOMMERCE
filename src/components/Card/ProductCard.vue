@@ -5,9 +5,9 @@
     <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
     <button @click="addItem(product)">Adicionar</button>
   </article> -->
-  <Card :style="{ width: '100%', minWidth: '200px', maxWidth: '220px' }">
+  <Card class="overflow-hidden rounded-xl" :style="{ width: '100%', minWidth: '200px', maxWidth: '220px' }">
     <template #header>
-      <img :src="product?.imageUrl" class="w-full object-cover" />
+      <img :src="product?.imageUrl" class="h-32 w-full object-cover" />
     </template>
 
     <template #title>
@@ -17,7 +17,7 @@
     <template #content>
       <p>{{ product?.description }}</p>
       <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
-      <button @click="addItem(product)">Adicionar</button>
+      <Button label="Adicionar" class="mt-3 w-full" @click.stop="addItem(product)" />
     </template>
   </Card>
 </template>

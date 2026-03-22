@@ -22,6 +22,9 @@ export default defineConfigWithVueTs(
   {
     rules: {
       'vue/valid-template-root': 'off',
+      'vue/require-v-for-key': 'off',
+      'vue/multi-word-component-names': ['error', { ignores: ['Button', 'Card'] }],
+      'vue/no-reserved-component-names': ['error', { htmlElementCaseSensitive: true }],
     },
   },
 
