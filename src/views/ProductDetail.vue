@@ -22,13 +22,17 @@ export default defineComponent({
   },
   methods: {
     getProduct() {
-      this.product = [new Product('Guitarra', 'desc', 200, 0.2, '1')].find(
+      const product = [new Product('1', 'Guitarra', 'desc', 200, 0.2)].find(
         (p) => p.id === this.productId,
       )
+      console.log(product)
+
     },
   },
   mounted() {
-    this.getProduct()
+    this.getProduct(
+
+    )
   },
 })
 </script>

@@ -6,6 +6,9 @@ import ProductDetail from '@/views/ProductDetail.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import Dashboard from '@/views/admin/Dashboard.vue'
 import AdminProducts from '@/views/admin/AdminProducts.vue'
+import Login from '@/views/Login.vue'
+import Register from '@/views/Register.vue'
+import { authenticatedGuard } from './guards/authenticated.guard'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -48,29 +51,19 @@ const router = createRouter({
             auth: true,
           },
         },
+        {
+          path: 'login',
+          component: Login,
+        },
+        {
+          path: 'register',
+          component: Register,
+        },
       ],
     },
   ],
 })
 
-router.beforeEach((to, _from, next) => {
-  if (to?.meta?.auth) {
-    const token = {
-      isAuth: false,
-      role: 'customer',
-    }
-
-    if (token.isAuth) {
-      const roles = to.meta.role as string[]
-
-      if (roles.some((role) => role === token.role)) next()
-      else next('/login')
-    } else {
-      next('/login')
-    }
-  } else {
-    next()
-  }
-})
+authenticatedGuard(router)
 
 export default router

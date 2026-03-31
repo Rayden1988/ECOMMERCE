@@ -7,7 +7,7 @@
   </article> -->
   <Card class="overflow-hidden rounded-xl" :style="{ width: '100%', minWidth: '200px', maxWidth: '220px' }">
     <template #header>
-      <img :src="product?.imageUrl" class="h-32 w-full object-cover" />
+      <img :src="mainImage" class="h-32 w-full object-cover" />
     </template>
 
     <template #title>
@@ -34,11 +34,22 @@ export default defineComponent({
     },
   },
 
-  emits: ['onClick'],
+  emits: ['onClick', 'on-click'],
 
   methods: {
     addItem(product: Product) {
       this.$emit('onClick', product)
+      this.$emit('on-click', product)
+    },
+  },
+  computed: {
+    mainImage(): string {
+      return (
+        this.product?.images?.find((i) => i.isMain)?.url ??
+        this.product?.images?.[0]?.url ??
+        this.product?.imageUrl ??
+        'https://picsum.photos/200'
+      )
     },
   },
 })

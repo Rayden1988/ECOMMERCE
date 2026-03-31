@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col min-h-screen">
-    <menu class="p-4 flex flex-row items-center gap-4">
+  <div class="flex min-h-screen flex-col bg-black">
+    <menu class="flex flex-row items-center gap-4 p-4 text-white">
       <RouterLink to="/">Home</RouterLink>
       <RouterLink to="/products">Produtos</RouterLink>
     </menu>
