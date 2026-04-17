@@ -21,6 +21,7 @@ export default defineConfigWithVueTs(
   vueTsConfigs.recommended,
   {
     rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
       'vue/valid-template-root': 'off',
       'vue/require-v-for-key': 'off',
       'vue/multi-word-component-names': ['error', { ignores: ['Button', 'Card'] }],

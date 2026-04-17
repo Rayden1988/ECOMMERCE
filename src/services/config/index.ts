@@ -12,7 +12,7 @@ export class AxiosConfig {
   setConfig() {
     this.$instance.interceptors.request.use((config) => {
       const token = localStorage.getItem('token')
-      if (token) {
+      if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }
       return config
@@ -26,9 +26,4 @@ export class AxiosConfig {
   }
 }
 
-export const apiConfig = {
-  baseURL: '/api',
-  timeout: 10000,
-}
-
-export const api = new AxiosConfig(apiConfig.baseURL).setConfig()
+export const api = new AxiosConfig().setConfig()

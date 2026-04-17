@@ -1,14 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useVuelidate from '@vuelidate/core'
-import {
-  email,
-  helpers,
-  maxLength,
-  minLength,
-  required,
-  sameAs,
-} from '@vuelidate/validators'
+import { email, helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
 import Erro from '@/components/Erro.vue'
@@ -64,10 +57,7 @@ export default defineComponent({
         },
         confirmPassword: {
           required: helpers.withMessage('Campo obrigatorio', required),
-          sameAs: helpers.withMessage(
-            'As senhas precisam ser iguais',
-            sameAs(this.form.password),
-          ),
+          sameAs: helpers.withMessage('As senhas precisam ser iguais', sameAs(this.form.password)),
         },
       },
     }
@@ -87,7 +77,7 @@ export default defineComponent({
 
       this.loading = true
       this.rest
-        .registerUser(body)
+        .register(body)
         .then((res) => {
           console.log(res, 'res')
           alert('Cadastro enviado.')
@@ -105,13 +95,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <main class="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-[#04080d]">
-    <div class="pointer-events-none absolute left-0 top-0 h-full w-[34px] bg-[#2a4a3b]/45"></div>
-    <div class="pointer-events-none absolute right-0 top-0 h-full w-[34px] bg-[#2a4a3b]/45"></div>
+  <main
+    class="relative flex h-screen w-screen items-center justify-center overflow-hidden bg-[#04080d]"
+  >
+    <div class="pointer-events-none absolute left-0 top-0 h-full w-8.5 bg-[#2a4a3b]/45"></div>
+    <div class="pointer-events-none absolute right-0 top-0 h-full w-8.5 bg-[#2a4a3b]/45"></div>
 
     <section class="flex h-[74vh] w-[78vw] items-center justify-center bg-[#03070b]">
       <form
-        class="flex w-[178px] flex-col gap-1.5 border border-[#3a4046] bg-[#060b10] p-2.5"
+        class="flex w-44.5 flex-col gap-1.5 border border-[#3a4046] bg-[#060b10] p-2.5"
         @submit.prevent="register"
       >
         <header class="pb-1 text-[10px] text-[#c7cdd4]">Faca seu registro</header>
@@ -167,7 +159,7 @@ export default defineComponent({
           label="Registrar"
           :loading="loading"
           :disabled="loading"
-          class="mt-1 h-5 w-full !rounded-none !border-[#45dfba] !bg-[#45dfba] !text-[9px] !text-[#06221c]"
+          class="mt-1 h-5 w-full rounded-none! border-[#45dfba]! bg-[#45dfba]! text-[9px]! text-[#06221c]!"
         />
       </form>
     </section>

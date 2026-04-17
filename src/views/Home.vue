@@ -15,15 +15,43 @@ export default defineComponent({
       },
       rest: new ProductRest(),
       products: [] as Product[],
+      isLoadingProducts: false,
+      productsError: '',
     }
   },
   methods: {
-    getProducts() {
+    async getProducts() {
       const params = { page: 1, limit: 10, isActive: true }
-      this.rest.getAll(params).then((res) => {
-        this.products = res.data.data
+      this.isLoadingProducts = true
+      this.productsError = ''
+
+      try {
+        const response = await this.rest.getAll(params)
+        this.products = response?.data?.data ?? []
         console.log(this.products, 'products')
-      })
+      } catch (error: unknown) {
+        this.products = []
+        this.productsError = this.buildProductsErrorMessage(error)
+      } finally {
+        this.isLoadingProducts = false
+      }
+    },
+
+    buildProductsErrorMessage(error: unknown): string {
+      const networkError = error as {
+        message?: string
+        code?: string
+      }
+
+      const message = (networkError?.message ?? '').toLowerCase()
+      const code = networkError?.code ?? ''
+      const isCorsError = message.includes('cors') || code === 'ERR_NETWORK'
+
+      if (isCorsError) {
+        return 'Erro de CORS ao acessar http://localhost:3000/api/products'
+      }
+
+      return 'Nao foi possivel carregar os produtos da API.'
     },
 
     addItem(product: Product) {
@@ -112,7 +140,21 @@ export default defineComponent({
 
 <template>
   <main>
-    <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+    <section
+      v-if="isLoadingProducts"
+      class="mb-4 rounded border border-slate-500 bg-slate-800 p-3 text-white"
+    >
+      Carregando produtos...
+    </section>
+
+    <section
+      v-else-if="productsError"
+      class="mb-4 rounded border border-red-500 bg-red-900/40 p-3 text-red-100"
+    >
+      {{ productsError }}
+    </section>
+
+    <section v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       <div v-for="product in products" :key="product.id">
         <div @click="goToDetail(product)">
           <ProductCard :product="product" @on-click="addItem" />

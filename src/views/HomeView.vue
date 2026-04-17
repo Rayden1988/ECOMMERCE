@@ -23,8 +23,15 @@ export default defineComponent({
       const params = { page: 1, limit: 10, isActive: true }
 
       this.rest.getAll(params).then((res) => {
-        this.products = (res?.data?.data ?? []).map((product) => {
-          return new Product(product.id, product.title, product.description, product.price, 0)
+        this.products = (res?.data?.data ?? []).map((product: any) => {
+          return new Product(
+            product.id,
+            product.title,
+            product.description,
+            product.price,
+            0,
+            product.imageUrl,
+          )
         })
 
         console.log(this.products, 'products')

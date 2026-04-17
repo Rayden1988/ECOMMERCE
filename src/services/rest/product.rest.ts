@@ -24,7 +24,7 @@ type ProductListResponseCompat = Product[] & {
 export class ProductRest {
   async getAll(params?: Record<string, unknown>): Promise<ProductListResponseCompat> {
     const path = '/products'
-    const response = await httpClient.get<unknown>(path, params)
+    const response = await httpClient.get(path, params)
     const items = this.extractItems(response)
 
     const mapped = items.map((item) => {

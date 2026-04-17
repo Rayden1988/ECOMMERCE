@@ -1,9 +1,10 @@
-import { httpClient } from '../config/config'
-import type { RegisterModel } from '@/model/register.model'
+import { HttpClient } from '../config/config'
 
 export class RegisterRest {
-  registerUser(body: RegisterModel): Promise<unknown> {
-    const path = '/register'
-    return httpClient.post(path, body)
+  constructor(private httpClient: HttpClient = new HttpClient()) {}
+
+  async register(body: { name: string; email: string; password: string }): Promise<any> {
+    const url = '/auth/register'
+    return this.httpClient.post(url, body)
   }
 }

@@ -45,9 +45,9 @@ export default defineComponent({
   computed: {
     mainImage(): string {
       return (
+        this.product?.imageUrl ??
         this.product?.images?.find((i) => i.isMain)?.url ??
         this.product?.images?.[0]?.url ??
-        this.product?.imageUrl ??
         'https://picsum.photos/200'
       )
     },

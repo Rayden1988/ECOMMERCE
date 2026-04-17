@@ -1,43 +1,27 @@
 import { api } from '.'
 
 interface IHttp {
-  get<T = unknown>(
-    path: string,
-    params?: Record<string, unknown>,
-    baseURL?: string,
-  ): Promise<T>
-  post<T = unknown>(path: string, body: unknown, baseURL?: string): Promise<T>
-  put<T = unknown>(path: string, body: unknown, baseURL?: string): Promise<T>
-  delete<T = unknown>(
-    path: string,
-    params?: Record<string, unknown>,
-    baseURL?: string,
-  ): Promise<T>
+  get(path: string, params: any, baseURL?: string): Promise<any>
+  post(path: string, body: any, baseURL?: string): Promise<any>
+  put(path: string, body: any, baseURL?: string): Promise<any>
+  delete(path: string, params: any, baseURL?: string): Promise<any>
 }
 
 export class HttpClient implements IHttp {
-  get<T = unknown>(
-    path: string,
-    params?: Record<string, unknown>,
-    baseURL?: string,
-  ): Promise<T> {
-    return api.get<T>(path, { params, baseURL }).then((res) => res.data)
+  async get(path: string, params: any, baseURL?: string): Promise<any> {
+    return api.get(path, { params, baseURL }).then((res) => res.data)
   }
 
-  post<T = unknown>(path: string, body: unknown, baseURL?: string): Promise<T> {
-    return api.post<T>(path, body, { baseURL }).then((res) => res.data)
+  async post(path: string, body: any, baseURL?: string): Promise<any> {
+    return api.post(path, body, { baseURL }).then((res) => res.data)
   }
 
-  put<T = unknown>(path: string, body: unknown, baseURL?: string): Promise<T> {
-    return api.put<T>(path, body, { baseURL }).then((res) => res.data)
+  async put(path: string, body: any, baseURL?: string): Promise<any> {
+    return api.put(path, body, { baseURL }).then((res) => res.data)
   }
 
-  delete<T = unknown>(
-    path: string,
-    params?: Record<string, unknown>,
-    baseURL?: string,
-  ): Promise<T> {
-    return api.delete<T>(path, { params, baseURL }).then((res) => res.data)
+  async delete(path: string, params: any, baseURL?: string): Promise<any> {
+    return api.delete(path, { params, baseURL }).then((res) => res.data)
   }
 }
 export const httpClient = new HttpClient()
