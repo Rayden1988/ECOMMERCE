@@ -1,7 +1,16 @@
-import type { Router } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+export function authenticatedGuard(router: any) {
+  router.beforeEach((to: any, from: any, next: any) => {
+    const authStore = useAuthStore()
 
-export function authenticatedGuard(router: Router) {
-  router.beforeEach((to, from, next) => {
-    next()
+    if (to.meta.auth) {
+      if (authStore.isAuth) {
+        next()
+      } else {
+        next('/login')
+      }
+    } else {
+      next()
+    }
   })
 }

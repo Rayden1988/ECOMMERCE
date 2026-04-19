@@ -1,12 +1,15 @@
+<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script lang="ts">
 import { defineComponent } from 'vue'
 import useVuelidate from '@vuelidate/core'
 import { email, helpers, maxLength, minLength, required, sameAs } from '@vuelidate/validators'
 import InputText from 'primevue/inputtext'
 import Password from 'primevue/password'
+import Button from 'primevue/button'
 import Erro from '@/components/Erro.vue'
 import { RegisterForm } from '@/model/register.form'
 import { RegisterRest } from '@/services/rest/register.rest'
+import { useAuthStore } from '@/stores/auth'
 
 type VuelidateState = {
   $validate: () => Promise<boolean> | boolean
@@ -18,6 +21,7 @@ export default defineComponent({
   components: {
     InputText,
     Password,
+    Button,
     Erro,
   },
   data() {
@@ -34,7 +38,9 @@ export default defineComponent({
     }
   },
   setup() {
+    const authStore = useAuthStore()
     return {
+      authStore,
       v$: useVuelidate(),
     }
   },
@@ -63,11 +69,14 @@ export default defineComponent({
     }
   },
   methods: {
-    register() {
+    async register() {
       const v$ = this.v$ as unknown as VuelidateState
-      v$.$validate()
-      console.log(v$, 'vuelidate')
-      if (v$.$invalid) return
+      const authStore = this.authStore as ReturnType<typeof useAuthStore>
+
+      this.v$.$touch()
+
+      const isValid = await v$.$validate()
+      if (!isValid) return
 
       const body = {
         name: this.form.name,
@@ -76,19 +85,40 @@ export default defineComponent({
       }
 
       this.loading = true
-      this.rest
-        .register(body)
-        .then((res) => {
-          console.log(res, 'res')
-          alert('Cadastro enviado.')
-        })
-        .catch((e) => {
-          console.error(e)
-          alert('Erro ao cadastrar.')
-        })
-        .finally(() => {
-          this.loading = false
-        })
+
+      try {
+        const response = await this.rest.register(body)
+
+        const payload = response?.data ?? response
+        const user = payload?.data?.user ?? payload?.user
+        const tokens = payload?.data?.tokens ?? payload?.tokens ?? payload?.token
+
+        if (!user || !tokens?.accessToken || !tokens?.refreshToken) {
+          throw new Error('Resposta de cadastro sem user/tokens')
+        }
+
+        authStore.setUser(user)
+        authStore.setAccessToken(tokens.accessToken)
+        authStore.setRefreshToken(tokens.refreshToken)
+
+        if (user.role === 'CUSTOMER') {
+          this.$router.push({ path: '/history' })
+        } else if (user.role === 'ADMIN') {
+          this.$router.push({ path: '/admin' })
+        }
+      } catch (e: any) {
+        console.error(e)
+
+        const apiMessage =
+          e?.response?.data?.message ||
+          e?.response?.data?.error ||
+          e?.message ||
+          'Erro ao cadastrar.'
+
+        alert(apiMessage)
+      } finally {
+        this.loading = false
+      }
     },
   },
 })
@@ -104,6 +134,7 @@ export default defineComponent({
     <section class="flex h-[74vh] w-[78vw] items-center justify-center bg-[#03070b]">
       <form
         class="flex w-44.5 flex-col gap-1.5 border border-[#3a4046] bg-[#060b10] p-2.5"
+        novalidate
         @submit.prevent="register"
       >
         <header class="pb-1 text-[10px] text-[#c7cdd4]">Faca seu registro</header>

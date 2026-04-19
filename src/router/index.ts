@@ -9,16 +9,29 @@ import AdminProducts from '@/views/admin/AdminProducts.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 import { authenticatedGuard } from './guards/authenticated.guard'
+import { authorizedGuard } from './guards/authorized.guard'
+import History from '@/views/History.vue'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
+      path: '/login',
+      component: Login,
+      meta: {
+        auth: false,
+      },
+    },
+    {
+      path: '/register',
+      component: Register,
+    },
+    {
       path: '/admin',
       component: AdminLayout,
       meta: {
         auth: true,
-        role: ['admin'],
+        role: ['ADMIN'],
       },
       redirect: '/admin/dashboard',
       children: [
@@ -49,15 +62,16 @@ const router = createRouter({
           component: ProductDetail,
           meta: {
             auth: true,
+            role: ['CUSTOMER'],
           },
         },
         {
-          path: 'login',
-          component: Login,
-        },
-        {
-          path: 'register',
-          component: Register,
+          path: 'history',
+          component: History,
+          meta: {
+            auth: true,
+            role: ['CUSTOMER'],
+          },
         },
       ],
     },
@@ -65,5 +79,6 @@ const router = createRouter({
 })
 
 authenticatedGuard(router)
+authorizedGuard(router)
 
 export default router

@@ -1,11 +1,17 @@
-import type { RouteLocationNormalized } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
 
-export function authorizedGuard(to: RouteLocationNormalized, role: string): boolean {
-  const allowedRoles = (to.meta.role as string[] | undefined) ?? []
+export function authorizedGuard(router: any) {
+  router.beforeEach((to: any, from: any, next: any) => {
+    const authStore = useAuthStore()
 
-  if (allowedRoles.length === 0) {
-    return true
-  }
-
-  return allowedRoles.includes(role)
+    if (to.meta.role) {
+      if (authStore.getRole && to.meta.role.includes(authStore.getRole)) {
+        next()
+      } else {
+        next('/login')
+      }
+    } else {
+      next()
+    }
+  })
 }
