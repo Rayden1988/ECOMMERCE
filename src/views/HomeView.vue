@@ -1,15 +1,17 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Product } from '@/router/model/product.model'
-import { Cart } from '@/model/cart.model'
 import ProductCard from '@/components/Card/ProductCard.vue'
-import CartItem from '@/components/Cart/CartItem.vue'
+import CartItem from '@/components/Cart'
 import { ProductRest } from '@/services/rest/product.rest'
 
 export default defineComponent({
   data() {
     return {
-      cart: new Cart(),
+      cart: {
+        list: [] as { product: Product; quantity: number }[],
+        total: 0,
+      },
       rest: new ProductRest(),
       products: [] as Product[],
     }
@@ -119,7 +121,7 @@ export default defineComponent({
     <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       <div v-for="product in products" :key="product.id">
         <div @click="goToDetail(product)">
-          <ProductCard :product="product" @on-click="addItem" />
+          <ProductCard :product="product" @add-item="addItem" />
         </div>
       </div>
     </section>

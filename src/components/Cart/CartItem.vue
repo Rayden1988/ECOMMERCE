@@ -1,49 +1,36 @@
 <template>
-  <div>
-    <Card :style="{ width: '100%', minWidth: '200px', maxWidth: '420px' }">
-      <template #content>
-        <div class="flex flex-row gap-2 items-center">
-          <img :src="item.product.imageUrl" class="w-28" />
-          <div class="flex-1 px-4">
-            <h3>{{ item.product.title }}</h3>
-            <p>{{ item.product.getPrice() }}</p>
-            <span class="flex items-center gap-2">
-              {{ item.quantity }}
-              <Button @click="decrementItem" label="-" />
-            </span>
-          </div>
-        </div>
-      </template>
+  <h1 @click="toggle">Cart</h1>
 
-      <template #footer>
-        <div class="flex flex-row-reverse">
-          <Button @click="removeItem" label="Deletar" />
-        </div>
-      </template>
-    </Card>
-  </div>
+  <article v-if="show">
+    <div v-for="item in cartStore.items" :key="item.product.id">
+      <div class="border p-4">
+        <h5>{{ item.product.title }}</h5>
+        <p>{{ item.product.price }}</p>
+        <span>{{ item.quantity }}</span>
+      </div>
+    </div>
+  </article>
 </template>
 
 <script lang="ts">
-import { Product } from '@/router/model/product.model'
-import { defineComponent, type PropType } from 'vue'
+import { useCartStore } from '@/stores/cart'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  props: {
-    item: {
-      type: Object as PropType<{ product: Product; quantity: number }>,
-      required: true,
-    },
+  name: 'CartItem',
+  setup() {
+    const cartStore = useCartStore()
+
+    return { cartStore }
   },
-
-  emits: ['decrementItem', 'removeItem'],
-
+  data() {
+    return {
+      show: false,
+    }
+  },
   methods: {
-    decrementItem() {
-      this.$emit('decrementItem', this.item.product)
-    },
-    removeItem() {
-      this.$emit('removeItem', this.item.product)
+    toggle() {
+      this.show = !this.show
     },
   },
 })

@@ -1,5 +1,6 @@
-import axios, { type AxiosInstance } from 'axios'
 
+import axios, { type AxiosInstance } from 'axios'
+import { useAuthStore } from "@/stores/auth";
 export class AxiosConfig {
   private $instance: AxiosInstance
 
@@ -11,7 +12,7 @@ export class AxiosConfig {
 
   setConfig() {
     this.$instance.interceptors.request.use((config) => {
-      const token = localStorage.getItem('token')
+      const token = useAuthStore().accessToken
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }

@@ -5,19 +5,35 @@
     <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
     <button @click="addItem(product)">Adicionar</button>
   </article> -->
-  <Card class="overflow-hidden rounded-xl" :style="{ width: '100%', minWidth: '200px', maxWidth: '220px' }">
+  <Card
+    class="w-full overflow-hidden rounded-xl bg-white shadow-sm"
+    :style="{ minWidth: '200px', maxWidth: '220px', minHeight: '410px' }"
+  >
     <template #header>
-      <img :src="mainImage" class="h-32 w-full object-cover" />
+      <img :src="mainImage" class="h-56 w-full object-cover" />
     </template>
 
     <template #title>
-      <h1>{{ product?.title }}</h1>
+      <h1 class="mb-1 text-base font-medium leading-tight text-zinc-900">
+        {{ product?.title ?? (product as any)?.name }}
+      </h1>
     </template>
 
     <template #content>
-      <p>{{ product?.description }}</p>
-      <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
-      <Button label="Adicionar" class="mt-3 w-full" @click.stop="addItem(product)" />
+      <div class="flex h-full flex-col gap-1">
+        <p class="max-w-[18ch] text-sm leading-snug text-zinc-500">
+          {{ product?.description ?? (product as any)?.shortDescription }}
+        </p>
+        <p class="text-sm leading-snug text-zinc-700">
+          R$:{{ product?.price.toFixed(2).replace('.', ',') }}
+        </p>
+        <Button
+          label="Adicionar"
+          size="small"
+          class="mt-4 w-full self-end"
+          @click.stop="addItem(product)"
+        />
+      </div>
     </template>
   </Card>
 </template>
@@ -34,12 +50,11 @@ export default defineComponent({
     },
   },
 
-  emits: ['onClick', 'on-click'],
+  emits: ['add-item'],
 
   methods: {
     addItem(product: Product) {
-      this.$emit('onClick', product)
-      this.$emit('on-click', product)
+      this.$emit('add-item', product)
     },
   },
   computed: {

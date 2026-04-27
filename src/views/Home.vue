@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue'
 import { Product } from '@/router/model/product.model'
 import ProductCard from '@/components/Card/ProductCard.vue'
-import CartItem from '@/components/Cart/CartItem.vue'
+import CartItem from '@/components/Cart'
 import { ProductRest } from '@/services/rest/product.rest'
 
 export default defineComponent({
@@ -157,7 +157,7 @@ export default defineComponent({
     <section v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
       <div v-for="product in products" :key="product.id">
         <div @click="goToDetail(product)">
-          <ProductCard :product="product" @on-click="addItem" />
+          <ProductCard :product="product" @add-item="addItem" />
         </div>
       </div>
     </section>
