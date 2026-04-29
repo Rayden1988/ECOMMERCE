@@ -9,6 +9,7 @@ import Button from 'primevue/button'
 import Erro from '@/components/Erro.vue'
 import { LoginRest } from '@/services/rest/login.rest'
 import { useAuthStore } from '@/stores/auth'
+import { useToast } from 'primevue/usetoast'
 
 type VuelidateState = {
   $validate: () => Promise<boolean> | boolean
@@ -54,9 +55,11 @@ export default defineComponent({
   },
   setup() {
     const authStore = useAuthStore()
+    const toast = useToast()
 
     return {
       authStore,
+      toast,
       v$: useVuelidate(),
     }
   },
@@ -103,6 +106,13 @@ export default defineComponent({
         authStore.setAccessToken(tokens.accessToken)
         authStore.setRefreshToken(tokens.refreshToken)
 
+        this.toast.add({
+          severity: 'success',
+          summary: 'Sucesso',
+          detail: 'Login realizado!',
+          life: 3000,
+        })
+
         if (user.role === 'CUSTOMER') {
           this.$router.push({ path: '/history' })
         } else if (user.role === 'ADMIN') {
@@ -117,7 +127,12 @@ export default defineComponent({
           e?.message ||
           'Erro ao fazer login.'
 
-        alert(apiMessage)
+        this.toast.add({
+          severity: 'error',
+          summary: 'Erro',
+          detail: apiMessage,
+          life: 4000,
+        })
       } finally {
         this.loading = false
       }

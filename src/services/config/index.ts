@@ -12,10 +12,15 @@ export class AxiosConfig {
 
   setConfig() {
     this.$instance.interceptors.request.use((config) => {
+      const url = config.url ?? ''
+      const isAuthRoute =
+        url.includes('/auth/login') || url.includes('/auth/register')
       const token = useAuthStore().accessToken
-      if (token && config.headers) {
+
+      if (!isAuthRoute && token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`
       }
+
       return config
     })
 

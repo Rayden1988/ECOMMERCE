@@ -1,6 +1,9 @@
 <template>
-  <main class="min-h-[calc(100vh-32px)] bg-[#f59e0b] px-0 pb-8 pt-0.5">
-    <h1 class="px-0.5 text-xs font-medium leading-none text-zinc-800">Products</h1>
+  <main class="min-h-[calc(100vh-32px)] bg-white px-0 pb-8 pt-0.5">
+    <header class="mb-6 border-b border-zinc-200 px-4 pb-3">
+      <h1 class="text-3xl font-semibold text-zinc-900">Nossos Produtos</h1>
+      <p class="mt-1 text-sm text-zinc-500">Explore nossa coleção exclusiva</p>
+    </header>
 
     <div v-if="loading.products">Loading</div>
 
@@ -19,6 +22,18 @@ import { ProductRest } from '@/services/rest/product.rest'
 import ProductCard from '@/components/Card/ProductCard.vue'
 import { defineComponent } from 'vue'
 import { useCartStore } from '@/stores/cart'
+
+type ProductApiItem = {
+  id: string
+  title?: string
+  name?: string
+  description?: string
+  shortDescription?: string
+  price?: number
+  discount?: number
+  imageUrl?: string
+  images?: Array<{ url: string; isMain?: boolean }>
+}
 
 export default defineComponent({
   name: 'ProductsView',
@@ -39,7 +54,18 @@ export default defineComponent({
       this.rest
         .getAll(this.params)
         .then((res) => {
-          this.products = res.data.data
+          this.products = (res.data.data ?? []).map((product: ProductApiItem) => {
+            return new Product(
+              product.id,
+              product.title ?? product.name ?? '',
+              product.description ?? product.shortDescription ?? '',
+              Number(product.price ?? 0),
+              Number(product.discount ?? 0),
+              product.imageUrl ?? '',
+              product.images ?? [],
+            )
+          })
+
           this.params.page = res.data.page
           this.params.limit = res.data.limit
         })

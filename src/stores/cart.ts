@@ -36,6 +36,9 @@ export const useCartStore = defineStore('cart', {
     existItems(state) {
       return state.items.length > 0
     },
+    totalQuantity(state) {
+      return state.items.reduce((acc, item) => acc + item.quantity, 0)
+    },
   },
 
   actions: {
@@ -97,6 +100,12 @@ export const useCartStore = defineStore('cart', {
       if (!productId) return
 
       this.items = this.items.filter((i) => i.product.id !== productId)
+      this.persistCart()
+    },
+
+    clearCart(): void {
+      this.items = []
+      this.show = false
       this.persistCart()
     },
   },

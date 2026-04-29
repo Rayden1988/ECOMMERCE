@@ -8,8 +8,8 @@ import Dashboard from '@/views/admin/Dashboard.vue'
 import AdminProducts from '@/views/admin/AdminProducts.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
-import { authenticatedGuard } from './guards/authenticated.guard'
-import { authorizedGuard } from './guards/authorized.guard'
+import { authenticatedGuard } from './authenticated.guard'
+import { authorizedGuard } from './authorized.guard'
 import History from '@/views/History.vue'
 
 const router = createRouter({
@@ -68,6 +68,22 @@ const router = createRouter({
         {
           path: 'history',
           component: History,
+          meta: {
+            auth: true,
+            role: ['CUSTOMER'],
+          },
+        },
+        {
+          path: 'checkout',
+          component: () => import('@/views/Checkout/index.vue'),
+          meta: {
+            auth: true,
+            role: ['CUSTOMER'],
+          },
+        },
+        {
+          path: 'orders',
+          component: () => import('@/views/Orders/index.vue'),
           meta: {
             auth: true,
             role: ['CUSTOMER'],

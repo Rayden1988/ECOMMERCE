@@ -1,37 +1,29 @@
 <template>
-  <!-- <article class="w-[200px]">
-    <h1>{{ product?.title }}</h1>
-    <p>{{ product?.description }}</p>
-    <p>R$:{{ product?.price.toFixed(2).replace('.', ',') }}</p>
-    <button @click="addItem(product)">Adicionar</button>
-  </article> -->
-  <Card
-    class="w-full overflow-hidden rounded-xl bg-white shadow-sm"
-    :style="{ minWidth: '200px', maxWidth: '220px', minHeight: '410px' }"
-  >
+  <Card class="w-full overflow-hidden rounded-xl bg-[#151515] shadow-xl" :style="{ minWidth: '200px', maxWidth: '220px', minHeight: '410px' }">
     <template #header>
       <img :src="mainImage" class="h-56 w-full object-cover" />
     </template>
 
     <template #title>
-      <h1 class="mb-1 text-base font-medium leading-tight text-zinc-900">
+      <h1 class="mb-1 text-center text-base font-medium leading-tight text-white">
         {{ product?.title ?? (product as any)?.name }}
       </h1>
     </template>
 
     <template #content>
-      <div class="flex h-full flex-col gap-1">
-        <p class="max-w-[18ch] text-sm leading-snug text-zinc-500">
+      <div class="flex h-full flex-col gap-1 px-3 pb-3">
+        <p class="max-w-[18ch] text-sm leading-snug text-zinc-400">
           {{ product?.description ?? (product as any)?.shortDescription }}
         </p>
-        <p class="text-sm leading-snug text-zinc-700">
-          R$:{{ product?.price.toFixed(2).replace('.', ',') }}
+        <p class="text-sm leading-snug text-zinc-400">
+          R$ {{ product?.price.toFixed(2).replace('.', ',') }}
         </p>
         <Button
-          label="Adicionar"
+          label="adicionar"
+          type="button"
           size="small"
-          class="mt-4 w-full self-end"
-          @click.stop="addItem(product)"
+          class="mt-4 w-full self-end border-[#3dd79f]! bg-[#3dd79f]! text-black!"
+          @click="addItem(product)"
         />
       </div>
     </template>
@@ -57,6 +49,7 @@ export default defineComponent({
       this.$emit('add-item', product)
     },
   },
+
   computed: {
     mainImage(): string {
       return (

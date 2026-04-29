@@ -5,5 +5,6 @@ export default defineComponent({})
 </script>
 
 <template>
+  <Toast />
   <RouterView />
 </template>

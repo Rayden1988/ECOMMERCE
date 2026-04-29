@@ -3,12 +3,16 @@ import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
   state: () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('token')
+    }
+
     return {
       user: localStorage.getItem('user')
         ? JSON.parse(localStorage.getItem('user')!)
         : new User(),
-      accessToken: localStorage.getItem('token') as string | null,
-      refreshToken: null as null | string,
+      accessToken: localStorage.getItem('accessToken') as string | null,
+      refreshToken: undefined as string | undefined,
     }
   },
 
@@ -37,7 +41,8 @@ export const useAuthStore = defineStore('auth', {
     },
 
     setAccessToken(token: string) {
-      localStorage.setItem('token', token)
+      localStorage.removeItem('token')
+      localStorage.setItem('accessToken', token)
       this.accessToken = token
     },
 
@@ -48,7 +53,9 @@ export const useAuthStore = defineStore('auth', {
     logout() {
       this.user = new User()
       this.accessToken = null
-      this.refreshToken = null
+      this.refreshToken = undefined
+      localStorage.removeItem('user')
+      localStorage.removeItem('accessToken')
       localStorage.removeItem('token')
     },
   },

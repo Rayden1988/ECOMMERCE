@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { Product } from '@/router/model/product.model'
+import { QueryParams } from '@/model/queryParams'
 import ProductCard from '@/components/Card/ProductCard.vue'
 import CartItem from '@/components/Cart'
 import { ProductRest } from '@/services/rest/product.rest'
@@ -13,6 +14,7 @@ export default defineComponent({
         total: 0,
       },
       rest: new ProductRest(),
+      params: new QueryParams(),
       products: [] as Product[],
     }
   },
@@ -22,17 +24,16 @@ export default defineComponent({
   },
   methods: {
     getProducts() {
-      const params = { page: 1, limit: 10, isActive: true }
-
-      this.rest.getAll(params).then((res) => {
+      this.rest.getAll(this.params).then((res) => {
         this.products = (res?.data?.data ?? []).map((product: any) => {
           return new Product(
             product.id,
-            product.title,
-            product.description,
-            product.price,
-            0,
-            product.imageUrl,
+            product.title ?? product.name ?? '',
+            product.description ?? product.shortDescription ?? '',
+            Number(product.price ?? 0),
+            Number(product.discount ?? 0),
+            product.imageUrl ?? '',
+            product.images ?? [],
           )
         })
 
